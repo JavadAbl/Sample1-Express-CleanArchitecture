@@ -1,0 +1,57 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+*.db
+src/Infrastructure/Database/Prisma
+
+# Environment variables
+.env
+.env.*.local
+
+# Logs
+logs
+*.log
+logs/*.log
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Runtime data
+lib-cov
+coverage
+.nyc_output
+coverage-final.json
+lcov.info
+
+# Build / Dist
+dist/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+
+# IDE / Editor stuff
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Debugging / profiling
+*.prof
+
+/src/generated/prisma

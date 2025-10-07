@@ -19,24 +19,32 @@ export class JwtUtil {
   private static readonly ACCESS_TTL = 60 * 15; // 15 min
   private static readonly REFRESH_TTL = 60 * 60 * 24 * 30; // 30 days
 
-  /** Create both access and refresh tokens for a given payload */
-  static async createTokens(payload: JWTPayload): Promise<TokenPair> {
+  /** Create an access token for a given payload */
+  static async createAccessToken(payload: JWTPayload): Promise<string> {
     const now = Math.floor(Date.now() / 1000);
-
-    const accessToken = await new SignJWT({ ...payload })
+    return await new SignJWT({ ...payload })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt(now)
       .setExpirationTime(now + this.ACCESS_TTL)
-      .setJti(randomBytes(16).toString("hex")) // unique token id
+      .setJti(randomBytes(16).toString("hex"))
       .sign(this.SECRET);
+  }
 
-    const refreshToken = await new SignJWT({ ...payload })
+  /** Create a refresh token for a given payload */
+  static async createRefreshToken(payload: JWTPayload): Promise<string> {
+    const now = Math.floor(Date.now() / 1000);
+    return await new SignJWT({ ...payload })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt(now)
       .setExpirationTime(now + this.REFRESH_TTL)
       .setJti(randomBytes(16).toString("hex"))
       .sign(this.SECRET);
+  }
 
+  /** Create both access and refresh tokens for a given payload */
+  static async createTokens(payload: JWTPayload): Promise<TokenPair> {
+    const accessToken = await this.createAccessToken(payload);
+    const refreshToken = await this.createRefreshToken(payload);
     return { accessToken, refreshToken };
   }
 

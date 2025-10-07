@@ -15,12 +15,12 @@ import { ErrorHandlerMiddleware } from "./Middlewares/ErrorHandlerMiddleware.js"
 import { registerControllers } from "./Utils/RegisterControllers.js";
 import { UserController } from "./Controllers/UserController.js";
 import { discoverPermissions } from "./Utils/DiscoverPermissions.js";
-import { TestController } from "./Controllers/TestController.js";
-import { UserCron } from "#Infrastructure/Cron/UserCron.js";
+import { AuthController } from "./Controllers/AuthController.js";
 
 const logger = AppLogger.createLogger("Server");
 
 export class AppServer {
+  private controllers = [UserController, AuthController];
   constructor(private readonly app: Application) {}
 
   public start(): void {
@@ -63,18 +63,13 @@ export class AppServer {
 
   //--------------------------------------------------------------------------------
   private setupRoutesMiddlewares(app: Application): void {
-    // const appRoutes = container.get<AppRoutes>(DITypes.AppRoutes);
-    // app.use(appRoutes.routes());
-    registerControllers(app, [UserController, TestController]);
+    registerControllers(app, this.controllers);
   }
 
   //--------------------------------------------------------------------------------
   private setupPermissions(): void {
-    const permissions = discoverPermissions([UserController, TestController]);
+    const permissions = discoverPermissions([UserController, this.controllers]);
     console.log(permissions);
-
-    const userCron = container.get<UserCron>(DITypes.UserCron);
-    userCron.startAllJobs();
   }
 
   //--------------------------------------------------------------------------------

@@ -13,6 +13,9 @@ import { IServiceFindMany } from "#Application/Interfaces/ServiceCriteria/Shared
 import { IUserServiceUpdate } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceUpdate.js";
 import { IUserServiceDelete } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceDelete.js";
 import { IUserRepository } from "#Application/Interfaces/Repository/IUserRepository.js";
+import { JwtUtil } from "#Globals/Utils/Jwt.js";
+import { IUserServiceLogin } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceLogin.js";
+import { CryptoUtils } from "#Application/Utils/CryptoUtils.js";
 
 @injectable()
 export class UserService implements IUserService {
@@ -21,6 +24,20 @@ export class UserService implements IUserService {
     @inject(DITypes.UserCache) private readonly userCache: UserCache,
   ) {}
 
+  async login(criteria: IUserServiceLogin): Promise<{ user: IUserDto; accessToken: string; refreshToken: string } | null> {
+    const user = await this.rep.findUnique({ where: { username: criteria.username } });
+
+    if (!user) throw new AppError("User not found", status.NOT_FOUND);
+
+    const isPasswordMatched = await CryptoUtils.verifyPassword(criteria.password, user.password);
+
+    if (!isPasswordMatched) throw new AppError("Invalid password", status.UNAUTHORIZED);
+
+    const tokens = await JwtUtil.createTokens({ userId: user.id, username: user.username });
+
+    return { user: toUserDto(user), ...tokens };
+  }
+
   async findById(criteria: IServiceFindById): Promise<IUserDto> {
     const user = await this.rep.findUnique({ where: { id: criteria } });
     if (!user) throw new AppError("User not found", status.NOT_FOUND);
@@ -28,7 +45,7 @@ export class UserService implements IUserService {
   }
 
   async findByUsername(criteria: IUserServiceFindByUsername): Promise<IUserDto> {
-    const user = await this.rep.findUnique({ where: { username: criteria } });
+    const user = await this.rep.findUnique({ where: { username: criteria.username } });
     if (!user) throw new AppError("User not found", status.NOT_FOUND);
     return toUserDto(user);
   }
@@ -46,12 +63,17 @@ export class UserService implements IUserService {
 
     if (existingUser) throw new AppError("This user is already exists", status.BAD_REQUEST);
 
+    const hashedPassword = await CryptoUtils.hashPassword(criteria.password);
+    criteria.password = hashedPassword;
+
     const user = await this.rep.create({ data: criteria });
 
     const userDto = toUserDto(user);
     this.userCache.addUser(userDto);
 
-    return userDto;
+    const tokens = await JwtUtil.createTokens({ userId: user.id, username: user.username });
+
+    return { userDto, ...tokens } as unknown as IUserDto;
   }
 
   async delete(criteria: IUserServiceDelete): Promise<void> {

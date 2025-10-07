@@ -5,7 +5,7 @@ export const DITypes = {
 
   //Controllers
   UserController: Symbol.for("UserController"),
-  TestController: Symbol.for("TestController"),
+  AuthController: Symbol.for("AuthController"),
 
   //Services
   UserService: Symbol.for("UserService"),

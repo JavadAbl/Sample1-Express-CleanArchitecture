@@ -1,1 +1,1 @@
-export type IUserServiceFindByUsername = string;
+export type IUserServiceFindByUsername = { username: string };

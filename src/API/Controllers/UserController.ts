@@ -54,10 +54,10 @@ export class UserController {
     await this.userService.delete(req.params);
     return res.status(status.NO_CONTENT).send();
   }
+
   @Auth()
   @Route("get", "/test")
   @Middlewares(LoggerMiddleware.handle)
-  //@Auth()
   public test(req: Request<unknown, unknown, unknown, unknown>, res: Response) {
     return res.status(status.NO_CONTENT).send();
   }

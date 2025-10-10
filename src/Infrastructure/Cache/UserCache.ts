@@ -9,7 +9,18 @@ export class UserCache extends BaseCache {
   }
 
   addUser(payload: IUserDto) {
-    this.set(`User:${payload.id}`, JSON.stringify(payload), 3600);
+    this.set(String(payload.id), JSON.stringify(payload), 3600);
     this.logger.info(`User ${payload.id} added to cache`);
+  }
+
+  async getUser(id: number): Promise<IUserDto | null> {
+    const data = await this.get<IUserDto>(String(id));
+    this.logger.info(`User ${id} retrieved from cache`);
+    return data;
+  }
+
+  async removeUser(id: number) {
+    this.delete(String(id));
+    this.logger.info(`User ${id} removed from cache`);
   }
 }

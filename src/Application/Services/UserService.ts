@@ -27,7 +27,7 @@ export class UserService implements IUserService {
   async login(criteria: IUserServiceLogin): Promise<{ user: IUserDto; accessToken: string; refreshToken: string } | null> {
     const user = await this.rep.findUnique({ where: { username: criteria.username } });
 
-    if (!user) throw new AppError("User not found", status.NOT_FOUND);
+    if (!user) throw new AppError("User not found", status.BAD_REQUEST);
 
     const isPasswordMatched = await CryptoUtils.verifyPassword(criteria.password, user.password);
 
@@ -35,10 +35,18 @@ export class UserService implements IUserService {
 
     const tokens = await JwtUtil.createTokens({ userId: user.id, username: user.username });
 
-    return { user: toUserDto(user), ...tokens };
+    const userDto = toUserDto(user);
+    this.userCache.addUser(userDto);
+
+    return { user: userDto, ...tokens };
   }
 
   async findById(criteria: IServiceFindById): Promise<IUserDto> {
+    // Try to get user from cache
+    const cachedUser = await this.getUserFromCache(criteria);
+    if (cachedUser) return cachedUser;
+
+    // If not found in cache, get from database
     const user = await this.rep.findUnique({ where: { id: criteria } });
     if (!user) throw new AppError("User not found", status.NOT_FOUND);
     return toUserDto(user);
@@ -86,5 +94,9 @@ export class UserService implements IUserService {
     const user = await this.rep.findUnique({ where: { id: criteria.id }, select: { id: true } });
     if (!user) throw new AppError("User not found", status.NOT_FOUND);
     await this.rep.update({ data: criteria, where: { id: criteria.id }, select: { id: true } });
+  }
+
+  private async getUserFromCache(userID: number): Promise<IUserDto | null> {
+    return this.userCache.getUser(userID);
   }
 }

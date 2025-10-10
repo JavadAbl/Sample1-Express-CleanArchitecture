@@ -8,6 +8,8 @@ import { IUserCreateRequest } from "#Application/Interfaces/Request/User/IUserCr
 import { Controller } from "#API/Decorators/Controller.js";
 import { ZodValidation } from "#API/Decorators/ZodValidation.js";
 import { Route } from "#API/Decorators/Route.js";
+import { SUserLogin } from "#API/Schema/User/SUserLogin.js";
+import { IUserLoginRequest } from "#Application/Interfaces/Request/User/IUserLoginRequest.js";
 
 @Controller("/Auth")
 @injectable()
@@ -21,8 +23,10 @@ export class AuthController {
     return res.status(status.CREATED).json(userDto);
   }
 
+  @ZodValidation(SUserLogin, "body")
   @Route("post", "/Login")
-  public async login(req: Request, res: Response) {
-    return res.json({ message: "Login not implemented yet" });
+  public async login(req: Request<unknown, unknown, IUserLoginRequest, unknown>, res: Response) {
+    const user = await this.userService.login(req.body);
+    return res.json(user);
   }
 }

@@ -88,6 +88,7 @@ export class UserService implements IUserService {
     const user = await this.rep.findUnique({ where: { id: criteria.id }, select: { id: true } });
     if (!user) throw new AppError("User not found", status.NOT_FOUND);
     await this.rep.delete({ where: { id: criteria.id }, select: { id: true } });
+    this.userCache.removeUser(criteria.id);
   }
 
   async update(criteria: IUserServiceUpdate): Promise<void> {

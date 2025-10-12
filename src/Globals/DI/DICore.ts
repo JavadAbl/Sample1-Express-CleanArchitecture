@@ -11,6 +11,7 @@ import { UserWorker } from "#Infrastructure/Queue/Workers/UserWorker.js";
 import { IUserRepository } from "#Application/Interfaces/Repository/IUserRepository.js";
 import { UserCron } from "#Infrastructure/Cron/UserCron.js";
 import { AuthController } from "#API/Controllers/AuthController.js";
+import { Mailer } from "../../Infrastructure/Mail/Mailer.js";
 
 const container = new Container();
 
@@ -36,5 +37,8 @@ container.bind<UserWorker>(DITypes.UserWorker).to(UserWorker).inSingletonScope()
 
 // Bind Crons
 container.bind<UserCron>(DITypes.UserCron).to(UserCron).inSingletonScope();
+
+// Bind Mailer
+container.bind<Mailer>(DITypes.Mailer).to(Mailer).inSingletonScope();
 
 export { container };

@@ -23,11 +23,11 @@ export class Mailer {
 
   constructor(config?: Partial<SmtpConfig>) {
     const {
-      host = process.env.SMTP_HOST ?? "",
+      host = process.env.SMTP_HOST ?? "sandbox.smtp.mailtrap.io",
       port = Number(process.env.SMTP_PORT) || 587,
       secure = process.env.SMTP_SECURE === "true",
-      user = process.env.SMTP_USER ?? "",
-      pass = process.env.SMTP_PASS ?? "",
+      user = process.env.SMTP_USER ?? "fbec63b4d0d67c",
+      pass = process.env.SMTP_PASS ?? "8222d23c0ae95f",
     } = config ?? {};
 
     if (!host || !user || !pass) {

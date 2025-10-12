@@ -25,6 +25,10 @@ export const DITypes = {
 
   //Crons
   UserCron: Symbol.for("UserCron"),
+
+  //Mailer
+    Mailer: Symbol.for("Mailer"),
+
 };
 
 Object.freeze(DITypes);

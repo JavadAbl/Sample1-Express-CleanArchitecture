@@ -16,9 +16,7 @@ import { UserController } from "#API/Controllers/UserController.js";
 import { discoverPermissions } from "#API/Utils/DiscoverPermissions.js";
 import { registerControllers } from "#API/Utils/RegisterControllers.js";
 import { AuthController } from "#API/Controllers/AuthController.js";
-import { Mailer } from "#Infrastructure/Mail/Mailer.js";
-import path from "path";
-import url from "url";
+import { injectable } from "inversify";
 
 const logger = AppLogger.createLogger("Server");
 
@@ -97,9 +95,9 @@ class Program {
   }
 
   private setupWorkers() {
-    container.get<UserWorker>(DITypes.UserWorker);
+    // container.get<UserWorker>(DITypes.UserWorker);
   }
 }
 
-const app = new Program(Express());
-app.run();
+const program = new Program(Express());
+program.run();

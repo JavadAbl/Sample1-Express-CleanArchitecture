@@ -13,7 +13,7 @@ import { UserCron } from "#Infrastructure/Cron/UserCron.js";
 import { AuthController } from "#API/Controllers/AuthController.js";
 import { Mailer } from "../../Infrastructure/Mail/Mailer.js";
 
-const container = new Container();
+export const container = new Container();
 
 // Bind controllers
 container.bind<UserController>(DITypes.UserController).to(UserController).inSingletonScope();
@@ -40,5 +40,3 @@ container.bind<UserCron>(DITypes.UserCron).to(UserCron).inSingletonScope();
 
 // Bind Mailer
 container.bind<Mailer>(DITypes.Mailer).to(Mailer).inSingletonScope();
-
-export { container };

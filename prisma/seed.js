@@ -26,6 +26,8 @@ function users(count = 10) {
   const users = [];
 
   for (let i = 1; i <= count; i++) {
+    const firstName = `John${i}`;
+    const lastName = `Doe${i}`;
     const username = `User${i}`;
     const email = `${username.toLowerCase()}@example.com`;
 
@@ -33,7 +35,13 @@ function users(count = 10) {
     const rawPassword = `123`;
     const passwordHash = hashSync(rawPassword, 10);
 
-    users.push({ username, email, password: passwordHash });
+    users.push({
+      firstName,
+      lastName,
+      username,
+      email,
+      password: passwordHash,
+    });
   }
 
   return users;

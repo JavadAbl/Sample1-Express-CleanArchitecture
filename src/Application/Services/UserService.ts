@@ -29,7 +29,8 @@ export class UserService implements IUserService {
   ) {}
 
   resetPassword(criteria: IUserServiceResetPassword): Promise<void> {
-    throw new Error("Method not implemented.");
+    this.userQueue.resetPasswordEmailJob(criteria);
+    return Promise.resolve();
   }
 
   async refreshToken(criteria: IUserServiceRefreshToken): Promise<{ accessToken: string; refreshToken: string }> {

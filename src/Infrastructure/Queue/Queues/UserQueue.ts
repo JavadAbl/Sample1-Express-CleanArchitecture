@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { BaseQueue } from "./BaseQueue.js";
 import { UserContract, UserJobs } from "../Jobs/UserJobsContract.js";
-import { IUserCreateRequest } from "#Application/Interfaces/Request/User/IUserCreateRequest.js";
+import { IUserServiceResetPassword } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceResetPassword.js";
 
 @injectable()
 export class UserQueue extends BaseQueue<UserContract> {
@@ -9,8 +9,8 @@ export class UserQueue extends BaseQueue<UserContract> {
     super(UserQueue.name);
   }
 
-  createUserJob(payload: IUserCreateRequest): void {
-    this.addJob(UserJobs.CreateUser, payload);
-    this.logger.info(`Job added: ${UserJobs.CreateUser}`, payload);
+  resetPasswordEmailJob(payload: IUserServiceResetPassword): void {
+    this.addJob(UserJobs.ResetPasswordEmail, payload);
+    this.logger.info(`Job added: ${UserJobs.ResetPasswordEmail}`, payload);
   }
 }

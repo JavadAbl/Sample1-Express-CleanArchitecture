@@ -38,8 +38,6 @@ export class Mailer {
       try {
         return await this.transporter.sendMail(options);
       } catch (err) {
-        console.log(err.message);
-
         if (attempt === maxAttempts) throw err;
         const delay = 2 ** attempt * 100; // 200 ms → 400 ms → 80 ms
         await new Promise((res) => setTimeout(res, delay));

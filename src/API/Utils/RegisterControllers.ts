@@ -1,4 +1,6 @@
 import { MiddlewareFunction } from "#API/Decorators/Middlewares.js";
+import { container } from "#Globals/DI/DICore.js";
+import { DITypes } from "#Globals/DI/DITypes.js";
 import express, { Router } from "express";
 
 export async function registerControllers(app: express.Application, controllers: any[]) {
@@ -11,7 +13,8 @@ export async function registerControllers(app: express.Application, controllers:
     const controllerMiddlewares: MiddlewareFunction[] = Reflect.getMetadata("middlewares", ctrl) || [];
     const routes = Reflect.getMetadata("routes", ctrl) || [];
 
-    const instance = new ctrl();
+    // const instance = new ctrl();
+    const instance: any = container.get(DITypes[ctrl.name as keyof typeof DITypes]);
     const router = Router();
 
     for (const { method, path, handler, middlewares } of routes) {
@@ -27,7 +30,7 @@ export async function registerControllers(app: express.Application, controllers:
       (router as any)[method](path, ...unique, instance[handler].bind(instance));
     }
 
-    app.use(basePath, router);
+    app.use("/api" + basePath, router);
   }
 }
 

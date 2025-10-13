@@ -1,14 +1,14 @@
 // UserJobsContract.ts
 
-import { IUserCreateRequest } from "#Application/Interfaces/Request/User/IUserCreateRequest.js";
+import { IUserServiceResetPassword } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceResetPassword.js";
 import { JobContract } from "./JobContract.js";
 
 export enum UserJobs {
-  CreateUser = "create-user",
+  ResetPasswordEmail = "reset-password_email",
 }
 
 export interface UserPayloads {
-  [UserJobs.CreateUser]: IUserCreateRequest;
+  [UserJobs.ResetPasswordEmail]: IUserServiceResetPassword;
 }
 
 export type UserContract = JobContract<UserJobs, UserPayloads>;

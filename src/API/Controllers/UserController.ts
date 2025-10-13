@@ -19,37 +19,40 @@ import { LoggerMiddleware } from "#API/Middlewares/LoggerMiddleware.js";
 import { Auth } from "#API/Decorators/Auth.js";
 import { ZodValidation } from "#API/Decorators/ZodValidation.js";
 
-@Controller("/users")
-@Middlewares(LoggerMiddleware.handle)
 @injectable()
+@Controller("/users")
 export class UserController {
   constructor(@inject(DITypes.UserService) private readonly userService: IUserService) {}
 
   @ZodValidation(SUserCreate, "body")
+  @Route("post", "/")
   public async post(req: Request<unknown, unknown, IUserCreateRequest, unknown>, res: Response) {
     const userDto = await this.userService.create(req.body);
     return res.status(status.CREATED).json(userDto);
   }
 
   @ZodValidation(SFindManyQuery, "query")
+  @Route("get", "/")
   public async get(req: Request<unknown, unknown, unknown, IFindManyQueryRequest>, res: Response) {
     const users = await this.userService.findMany(req.query);
     return res.json(users);
   }
 
   @ZodValidation(SGetById, "params")
+  @Route("get", "/:id")
   public async getById(req: Request<IGetByIdRequest, unknown, unknown, unknown>, res: Response) {
     const user = await this.userService.findById(req.params.id);
     return res.json(user);
   }
 
+  @Route("put", "/")
   public async put(req: Request<unknown, unknown, IUserDto, unknown>, res: Response) {
     await this.userService.update(req.body);
     return res.status(status.NO_CONTENT).send();
   }
 
-  @Auth()
   @ZodValidation(SDelete, "params")
+  @Route("delete", "/:id")
   public async delete(req: Request<IDeleteRequest, unknown, unknown, unknown>, res: Response) {
     await this.userService.delete(req.params);
     return res.status(status.NO_CONTENT).send();

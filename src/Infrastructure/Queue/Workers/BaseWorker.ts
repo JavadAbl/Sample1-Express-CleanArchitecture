@@ -1,7 +1,7 @@
 import { config } from "#Globals/Configs/AppConfig.js";
 import { AppLogger } from "#Globals/Utils/Logger.js";
 import { Worker } from "bullmq";
-import { JobContract } from "../../../Application/Jobs/JobContract.js";
+import { JobContract } from "../Jobs/JobContract.js";
 
 export type JobHandler<T> = (data: T) => Promise<any>;
 

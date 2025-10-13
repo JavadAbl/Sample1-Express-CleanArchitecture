@@ -5,7 +5,7 @@ import { createBullBoard } from "@bull-board/api";
 import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
 import { AppLogger } from "#Globals/Utils/Logger.js";
 import { config } from "#Globals/Configs/AppConfig.js";
-import { JobContract } from "../../../Application/Jobs/JobContract.js";
+import { JobContract } from "../Jobs/JobContract.js";
 
 const bullMQAdapters: BullMQAdapter[] = [];
 

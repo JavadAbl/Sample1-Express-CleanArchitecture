@@ -6,6 +6,8 @@ import { IUserServiceFindByUsername } from "../ServiceCriteria/User/IUserService
 import { IUserServiceUpdate } from "../ServiceCriteria/User/IUserServiceUpdate.js";
 import { IUserServiceDelete } from "../ServiceCriteria/User/IUserServiceDelete.js";
 import { IUserServiceLogin } from "../ServiceCriteria/User/IUserServiceLogin.js";
+import { IUserServiceRefreshToken } from "../ServiceCriteria/User/IUserServiceRefreshToken.js";
+import { IUserServiceResetPassword } from "../ServiceCriteria/User/IUserServiceResetPassword.js";
 
 export interface IUserService {
   create(criteria: IUserServiceCreate): Promise<IUserDto>;
@@ -15,4 +17,6 @@ export interface IUserService {
   update(criteria: IUserServiceUpdate): Promise<void>;
   delete(criteria: IUserServiceDelete): Promise<void>;
   login(criteria: IUserServiceLogin): Promise<{ user: IUserDto; accessToken: string; refreshToken: string } | null>;
+  refreshToken(criteria: IUserServiceRefreshToken): Promise<{ accessToken: string; refreshToken: string }>;
+  resetPassword(criteria: IUserServiceResetPassword): Promise<void>;
 }

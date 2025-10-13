@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { BaseQueue } from "./BaseQueue.js";
-import { UserContract, UserJobs } from "../../../Application/Jobs/UserJobsContract.js";
+import { UserContract, UserJobs } from "../Jobs/UserJobsContract.js";
 import { IUserCreateRequest } from "#Application/Interfaces/Request/User/IUserCreateRequest.js";
 
 @injectable()

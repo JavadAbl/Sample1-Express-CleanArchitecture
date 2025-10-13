@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { BaseWorker } from "./BaseWorker.js";
 import { UserQueue } from "../Queues/UserQueue.js";
-import { UserContract, UserJobs } from "../../../Application/Jobs/UserJobsContract.js";
+import { UserContract, UserJobs } from "../Jobs/UserJobsContract.js";
 import { UserService } from "#Application/Services/UserService.js";
 import { DITypes } from "#Globals/DI/DITypes.js";
 

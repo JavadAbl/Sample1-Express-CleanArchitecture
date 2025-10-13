@@ -8,8 +8,11 @@ import { IUserCreateRequest } from "#Application/Interfaces/Request/User/IUserCr
 import { Controller } from "#API/Decorators/Controller.js";
 import { ZodValidation } from "#API/Decorators/ZodValidation.js";
 import { Route } from "#API/Decorators/Route.js";
-import { SUserLogin } from "#API/Schema/User/SUserLogin.js";
-import { IUserLoginRequest } from "#Application/Interfaces/Request/User/IUserLoginRequest.js";
+import { IUserLoginRequest } from "#Application/Interfaces/Request/Auth/IAuthLoginRequest.js";
+import { SAuthLogin } from "#API/Schema/Auth/SAuthLogin.js";
+import { SAuthRefreshToken } from "#API/Schema/Auth/SAuthRefreshToken.js";
+import { IAuthRefreshTokenRequest } from "#Application/Interfaces/Request/Auth/IAuthRefreshTokenRequest.js";
+import { SAuthResetPassword } from "#API/Schema/Auth/SAuthResetPassword.js";
 
 @Controller("/Auth")
 @injectable()
@@ -18,15 +21,29 @@ export class AuthController {
 
   @ZodValidation(SUserCreate, "body")
   @Route("post", "/Register")
-  public async register(req: Request<unknown, unknown, IUserCreateRequest, unknown>, res: Response) {
+  public async register(req: Request<unknown, unknown, IUserCreateRequest>, res: Response) {
     const userDto = await this.userService.create(req.body);
     return res.status(status.CREATED).json(userDto);
   }
 
-  @ZodValidation(SUserLogin, "body")
+  @ZodValidation(SAuthLogin, "body")
   @Route("post", "/Login")
-  public async login(req: Request<unknown, unknown, IUserLoginRequest, unknown>, res: Response) {
+  public async login(req: Request<unknown, unknown, IUserLoginRequest>, res: Response) {
     const user = await this.userService.login(req.body);
     return res.json(user);
+  }
+
+  @ZodValidation(SAuthRefreshToken, "body")
+  @Route("post", "/RefreshToken")
+  public async refreshToken(req: Request<unknown, unknown, IAuthRefreshTokenRequest>, res: Response) {
+    const tokens = await this.userService.refreshToken(req.body);
+    return res.json(tokens);
+  }
+
+  @ZodValidation(SAuthResetPassword, "body")
+  @Route("post", "/ResetPassword")
+  public async resetPassword(req: Request<unknown, unknown, IAuthRefreshTokenRequest>, res: Response) {
+    await this.userService.resetPassword(req.body);
+    return res.status(status.NO_CONTENT).send();
   }
 }

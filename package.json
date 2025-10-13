@@ -5,7 +5,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsx --watch src/Application.ts",
+    "dev": "tsx --watch src/Program.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",

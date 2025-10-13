@@ -16,13 +16,29 @@ import { IUserRepository } from "#Application/Interfaces/Repository/IUserReposit
 import { JwtUtil } from "#Globals/Utils/Jwt.js";
 import { IUserServiceLogin } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceLogin.js";
 import { CryptoUtils } from "#Application/Utils/CryptoUtils.js";
+import { IUserServiceRefreshToken } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceRefreshToken.js";
+import { IUserServiceResetPassword } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceResetPassword.js";
+import { UserQueue } from "#Infrastructure/Queue/Queues/UserQueue.js";
 
 @injectable()
 export class UserService implements IUserService {
   constructor(
     @inject(DITypes.UserRepository) private readonly rep: IUserRepository,
     @inject(DITypes.UserCache) private readonly userCache: UserCache,
+    @inject(DITypes.UserQueue) private readonly userQueue: UserQueue,
   ) {}
+
+  resetPassword(criteria: IUserServiceResetPassword): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  async refreshToken(criteria: IUserServiceRefreshToken): Promise<{ accessToken: string; refreshToken: string }> {
+    const refreshToken = criteria.refreshToken;
+    const payload = await JwtUtil.verifyRefreshToken(refreshToken);
+    if (!payload) throw new AppError("Invalid refresh token", status.UNAUTHORIZED);
+
+    return await JwtUtil.createTokens({ userId: payload.userId, username: payload.username });
+  }
 
   async login(criteria: IUserServiceLogin): Promise<{ user: IUserDto; accessToken: string; refreshToken: string } | null> {
     const user = await this.rep.findUnique({ where: { username: criteria.username } });

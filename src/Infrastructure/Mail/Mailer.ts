@@ -2,33 +2,17 @@
 import nodemailer, { Transporter, SendMailOptions, SentMessageInfo } from "nodemailer";
 import { readFile } from "fs/promises";
 import Handlebars from "handlebars";
+import { AppError } from "#Globals/Utils/AppError.js";
+import { config } from "#Globals/Configs/AppConfig.js";
 
-export interface SmtpConfig {
-  host: string;
-  port: number;
-  secure: boolean;
-  user: string;
-  pass: string;
-}
-
-/**
- * Reusable Nodemailer wrapper with:
- * • Env‑based defaults
- * • Basic validation
- * • Exponential‑backoff retry
- * • Optional Handlebars templating
- */
 export class Mailer {
   private transporter: Transporter;
 
-  constructor(config?: Partial<SmtpConfig>) {
-    const {
-      host = process.env.SMTP_HOST ?? "sandbox.smtp.mailtrap.io",
-      port = Number(process.env.SMTP_PORT) || 587,
-      secure = process.env.SMTP_SECURE === "true",
-      user = process.env.SMTP_USER ?? "fbec63b4d0d67c",
-      pass = process.env.SMTP_PASS ?? "8222d23c0ae95f",
-    } = config ?? {};
+  constructor() {
+    const host = config.MAIL_ADDRESS;
+    const port = config.MAIL_PORT;
+    const user = config.MAIL_USER;
+    const pass = config.MAIL_PASSWORD;
 
     if (!host || !user || !pass) {
       throw new AppError("Missing required SMTP configuration");
@@ -36,9 +20,10 @@ export class Mailer {
 
     this.transporter = nodemailer.createTransport({
       host,
-      port,
-      secure,
+      port: Number(port),
+      secure: false,
       auth: { user, pass },
+      tls: { rejectUnauthorized: false },
     });
   }
 
@@ -53,6 +38,8 @@ export class Mailer {
       try {
         return await this.transporter.sendMail(options);
       } catch (err) {
+        console.log(err.message);
+
         if (attempt === maxAttempts) throw err;
         const delay = 2 ** attempt * 100; // 200 ms → 400 ms → 80 ms
         await new Promise((res) => setTimeout(res, delay));
@@ -74,10 +61,12 @@ export class Mailer {
   }
 }
 
+/*
 /////////////////////Example Usage
 // src/app.ts
 import path from "path";
-import { AppError } from "#Globals/Utils/AppError.js";
+ const __filename = url.fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
 
 (async () => {
   const mailer = new Mailer(); // reads env vars automatically
@@ -85,7 +74,7 @@ import { AppError } from "#Globals/Utils/AppError.js";
   // 1️⃣ Simple text email
   await mailer.send({
     from: '"Acme Corp" <no-reply@acme.com>',
-    to: "user@example.com",
+    to: "work.javadabl@gmail.com",
     subject: "Welcome!",
     text: "Your account has been created.",
   });
@@ -93,12 +82,12 @@ import { AppError } from "#Globals/Utils/AppError.js";
   // 2️⃣ HTML email with attachment
   await mailer.send({
     from: '"Acme Corp" <no-reply@acme.com>',
-    to: "user@example.com",
+    to: "work.javadabl@gmail.com",
     subject: "Invoice #1234",
     html: "<p>Please find your invoice attached.</p>",
     attachments: [{ filename: "invoice-1234.pdf", path: "/tmp/invoice-1234.pdf" }],
   });
-
+ 
   // 3️⃣ Templated email
   const tmpl = path.resolve(__dirname, "templates", "reset-password.hbs");
   await mailer.sendTemplate(
@@ -109,5 +98,5 @@ import { AppError } from "#Globals/Utils/AppError.js";
       to: "jane@example.com",
       subject: "Password Reset Request",
     },
-  );
-})();
+  ); 
+})(); */

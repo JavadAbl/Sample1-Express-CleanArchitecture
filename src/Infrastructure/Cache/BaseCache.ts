@@ -22,6 +22,7 @@ export abstract class BaseCache {
       const data = JSON.stringify(value);
       if (ttlSeconds) await this.client.setEx(redisKey, ttlSeconds, data);
       else await this.client.set(redisKey, data);
+      this.logger.info(`Cache set for key ${redisKey}`);
     } catch (err) {
       this.logger.error(`Failed to set cache for key ${redisKey}`, err);
       throw err;
@@ -32,6 +33,9 @@ export abstract class BaseCache {
     const redisKey = this.buildKey(key);
     try {
       const data = await this.client.get(redisKey);
+
+      if (data) this.logger.info(`Cache hit for key ${redisKey}`);
+
       return data ? (JSON.parse(data) as T) : null;
     } catch (err) {
       this.logger.error(`Failed to get cache for key ${redisKey}`, err);
@@ -43,6 +47,7 @@ export abstract class BaseCache {
     const redisKey = this.buildKey(key);
     try {
       await this.client.del(redisKey);
+      this.logger.info(`Cache deleted for key ${redisKey}`);
     } catch (err) {
       this.logger.error(`Failed to delete cache for key ${redisKey}`, err);
       throw err;

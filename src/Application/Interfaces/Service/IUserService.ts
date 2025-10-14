@@ -1,13 +1,14 @@
 import { IUserDto } from "#Application/Interfaces/Dto/User/IUserDto.js";
-import { IServiceFindMany } from "../ServiceCriteria/Shared/IServiceFindMany.js";
-import { IUserServiceCreate } from "../ServiceCriteria/User/IUserServiceCreate.js";
-import { IServiceFindById } from "../ServiceCriteria/Shared/IServiceFindById.js";
-import { IUserServiceFindByUsername } from "../ServiceCriteria/User/IUserServiceFindByUsername.js";
-import { IUserServiceUpdate } from "../ServiceCriteria/User/IUserServiceUpdate.js";
-import { IUserServiceDelete } from "../ServiceCriteria/User/IUserServiceDelete.js";
-import { IUserServiceLogin } from "../ServiceCriteria/User/IUserServiceLogin.js";
-import { IUserServiceRefreshToken } from "../ServiceCriteria/User/IUserServiceRefreshToken.js";
-import { IUserServiceResetPassword } from "../ServiceCriteria/User/IUserServiceResetPassword.js";
+import { IServiceFindById, IServiceFindMany } from "../ServiceMethodTypes/SharedServiceMethodTypes.js";
+import {
+  IUserServiceCreate,
+  IUserServiceDelete,
+  IUserServiceFindByUsername,
+  IUserServiceLogin,
+  IUserServiceRefreshToken,
+  IUserServiceResetPassword,
+  IUserServiceUpdate,
+} from "../ServiceMethodTypes/UserServiceMethodTypes.js";
 
 export interface IUserService {
   create(criteria: IUserServiceCreate): Promise<IUserDto>;

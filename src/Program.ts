@@ -13,8 +13,8 @@ import { AppLogger } from "#Globals/Utils/Logger.js";
 import { UserWorker } from "#Infrastructure/Queue/Workers/UserWorker.js";
 import { ErrorHandlerMiddleware } from "#API/Middlewares/ErrorHandlerMiddleware.js";
 import { UserController } from "#API/Controllers/UserController.js";
-import { discoverPermissions } from "#API/Utils/DiscoverPermissions.js";
-import { registerControllers } from "#API/Utils/RegisterControllers.js";
+import { discoverPermissions } from "#Globals/Utils/DiscoverPermissions.js";
+import { registerControllers } from "#Globals/Utils/RegisterControllers.js";
 import { AuthController } from "#API/Controllers/AuthController.js";
 import { injectable } from "inversify";
 

@@ -7,3 +7,11 @@ export type IUserCreateRequest = {
   bio: string | null;
   image: string | null;
 };
+
+export type IUserUpdateRequest = Partial<{
+  id: number;
+  username: string;
+  firstName: string;
+  lastName: string;
+  bio: string | null;
+}>;

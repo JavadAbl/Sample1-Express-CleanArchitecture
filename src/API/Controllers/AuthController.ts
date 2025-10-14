@@ -4,15 +4,14 @@ import { IUserService } from "#Application/Interfaces/Service/IUserService.js";
 import { DITypes } from "#Globals/DI/DITypes.js";
 import status from "http-status";
 import { SUserCreate } from "#API/Schema/User/SUserCreate.js";
-import { IUserCreateRequest } from "#Application/Interfaces/Request/User/IUserCreateRequest.js";
 import { Controller } from "#API/Decorators/Controller.js";
 import { ZodValidation } from "#API/Decorators/ZodValidation.js";
 import { Route } from "#API/Decorators/Route.js";
-import { IUserLoginRequest } from "#Application/Interfaces/Request/Auth/IAuthLoginRequest.js";
 import { SAuthLogin } from "#API/Schema/Auth/SAuthLogin.js";
 import { SAuthRefreshToken } from "#API/Schema/Auth/SAuthRefreshToken.js";
-import { IAuthRefreshTokenRequest } from "#Application/Interfaces/Request/Auth/IAuthRefreshTokenRequest.js";
 import { SAuthResetPassword } from "#API/Schema/Auth/SAuthResetPassword.js";
+import { IAuthRefreshTokenRequest, IUserLoginRequest } from "#Application/Interfaces/Request/AuthRequests.js";
+import { IUserCreateRequest } from "#Application/Interfaces/Request/UserRequests.js";
 
 @Controller("/Auth")
 @injectable()
@@ -43,7 +42,9 @@ export class AuthController {
   @ZodValidation(SAuthResetPassword, "body")
   @Route("post", "/ResetPassword")
   public async resetPassword(req: Request<unknown, unknown, IAuthRefreshTokenRequest>, res: Response) {
-    await this.userService.resetPassword(req.body);
+    // await this.userService.resetPassword(req.body);
+    console.log(req.body);
+
     return res.status(status.NO_CONTENT).send();
   }
 }

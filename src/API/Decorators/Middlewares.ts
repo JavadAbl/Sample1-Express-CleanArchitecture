@@ -1,6 +1,7 @@
 import "reflect-metadata";
+import { Request, Response, NextFunction } from "express";
 
-export type MiddlewareFunction = (req: any, res: any, next: () => void) => void;
+export type MiddlewareFunction = (req: Request, res: Response, next: NextFunction) => any;
 
 export function Middlewares(...middlewares: MiddlewareFunction[]) {
   return (target: any, propertyKey?: string) => {

@@ -14,11 +14,11 @@ export class AuthenticationMiddleware {
     try {
       const payload = await JwtUtil.verifyAccessToken(token);
       (request as any).userId = payload.userId;
+      next();
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      return next(new AppError("Invalid Token", status.UNAUTHORIZED));
+      next(new AppError("Invalid Token", status.UNAUTHORIZED));
     }
-    next();
   }
 }

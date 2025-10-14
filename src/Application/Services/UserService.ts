@@ -5,20 +5,21 @@ import { inject, injectable } from "inversify";
 import { AppError } from "#Globals/Utils/AppError.js";
 import { UserCache } from "#Infrastructure/Cache/UserCache.js";
 import { buildFindManyArgs } from "#Globals/Utils/PrismaUtils.js";
-import { IUserServiceCreate } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceCreate.js";
+import { UserQueue } from "#Infrastructure/Queue/Queues/UserQueue.js";
+import {
+  IUserServiceCreate,
+  IUserServiceDelete,
+  IUserServiceFindByUsername,
+  IUserServiceLogin,
+  IUserServiceRefreshToken,
+  IUserServiceResetPassword,
+  IUserServiceUpdate,
+} from "#Application/Interfaces/ServiceMethodTypes/UserServiceMethodTypes.js";
+import { IServiceFindById, IServiceFindMany } from "#Application/Interfaces/ServiceMethodTypes/SharedServiceMethodTypes.js";
 import status from "http-status";
-import { IServiceFindById } from "#Application/Interfaces/ServiceCriteria/Shared/IServiceFindById.js";
-import { IUserServiceFindByUsername } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceFindByUsername.js";
-import { IServiceFindMany } from "#Application/Interfaces/ServiceCriteria/Shared/IServiceFindMany.js";
-import { IUserServiceUpdate } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceUpdate.js";
-import { IUserServiceDelete } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceDelete.js";
 import { IUserRepository } from "#Application/Interfaces/Repository/IUserRepository.js";
 import { JwtUtil } from "#Globals/Utils/Jwt.js";
-import { IUserServiceLogin } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceLogin.js";
-import { CryptoUtils } from "#Application/Utils/CryptoUtils.js";
-import { IUserServiceRefreshToken } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceRefreshToken.js";
-import { IUserServiceResetPassword } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceResetPassword.js";
-import { UserQueue } from "#Infrastructure/Queue/Queues/UserQueue.js";
+import { CryptoUtils } from "#Globals/Utils/CryptoUtils.js";
 
 @injectable()
 export class UserService implements IUserService {
@@ -30,19 +31,25 @@ export class UserService implements IUserService {
 
   resetPassword(criteria: IUserServiceResetPassword): Promise<void> {
     this.userQueue.resetPasswordEmailJob(criteria);
+
     return Promise.resolve();
   }
 
   async refreshToken(criteria: IUserServiceRefreshToken): Promise<{ accessToken: string; refreshToken: string }> {
     const refreshToken = criteria.refreshToken;
-    const payload = await JwtUtil.verifyRefreshToken(refreshToken);
-    if (!payload) throw new AppError("Invalid refresh token", status.UNAUTHORIZED);
+
+    let payload;
+    try {
+      payload = await JwtUtil.verifyRefreshToken(refreshToken);
+    } catch (error: any) {
+      throw new AppError("Invalid refresh token", status.UNAUTHORIZED, error);
+    }
 
     return await JwtUtil.createTokens({ userId: payload.userId, username: payload.username });
   }
 
   async login(criteria: IUserServiceLogin): Promise<{ user: IUserDto; accessToken: string; refreshToken: string } | null> {
-    const user = await this.rep.findUnique({ where: { username: criteria.username } });
+    const user = await this.rep.findUnique({ where: { username: criteria.username.toLowerCase() } });
 
     if (!user) throw new AppError("User not found", status.BAD_REQUEST);
 
@@ -60,7 +67,7 @@ export class UserService implements IUserService {
 
   async findById(criteria: IServiceFindById): Promise<IUserDto> {
     // Try to get user from cache
-    const cachedUser = await this.getUserFromCache(criteria);
+    const cachedUser = await this.userCache.getUser(criteria);
     if (cachedUser) return cachedUser;
 
     // If not found in cache, get from database
@@ -84,14 +91,17 @@ export class UserService implements IUserService {
   }
 
   async create(criteria: IUserServiceCreate): Promise<IUserDto> {
-    const existingUser = await this.rep.findUnique({ where: { username: criteria.username }, select: { id: true } });
+    const existingUser = await this.rep.findUnique({
+      where: { username: criteria.username.toLowerCase() },
+      select: { id: true },
+    });
 
     if (existingUser) throw new AppError("This user is already exists", status.BAD_REQUEST);
 
     const hashedPassword = await CryptoUtils.hashPassword(criteria.password);
     criteria.password = hashedPassword;
 
-    const user = await this.rep.create({ data: criteria });
+    const user = await this.rep.create({ data: { ...criteria, username: criteria.username.toLowerCase() } });
 
     const userDto = toUserDto(user);
     this.userCache.addUser(userDto);
@@ -111,10 +121,10 @@ export class UserService implements IUserService {
   async update(criteria: IUserServiceUpdate): Promise<void> {
     const user = await this.rep.findUnique({ where: { id: criteria.id }, select: { id: true } });
     if (!user) throw new AppError("User not found", status.NOT_FOUND);
-    await this.rep.update({ data: criteria, where: { id: criteria.id }, select: { id: true } });
-  }
 
-  private async getUserFromCache(userID: number): Promise<IUserDto | null> {
-    return this.userCache.getUser(userID);
+    const updatedUser = await this.rep.update({ data: criteria, where: { id: criteria.id }, omit: { password: true } });
+
+    await this.userCache.removeUser(criteria.id!);
+    this.userCache.addUser(updatedUser);
   }
 }

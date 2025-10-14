@@ -28,7 +28,7 @@ function users(count = 10) {
   for (let i = 1; i <= count; i++) {
     const firstName = `John${i}`;
     const lastName = `Doe${i}`;
-    const username = `User${i}`;
+    const username = `User${i}`.toLowerCase();
     const email = `${username.toLowerCase()}@example.com`;
 
     // Use a deterministic password for the seed (e.g., "password{i}")

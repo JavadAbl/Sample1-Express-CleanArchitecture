@@ -13,13 +13,18 @@ import {
   IUserServiceLogin,
   IUserServiceRefreshToken,
   IUserServiceResetPassword,
+  IUserServiceResetPasswordValidate,
   IUserServiceUpdate,
 } from "#Application/Interfaces/ServiceMethodTypes/UserServiceMethodTypes.js";
 import { IServiceFindById, IServiceFindMany } from "#Application/Interfaces/ServiceMethodTypes/SharedServiceMethodTypes.js";
 import status from "http-status";
 import { IUserRepository } from "#Application/Interfaces/Repository/IUserRepository.js";
-import { JwtUtil } from "#Globals/Utils/Jwt.js";
+import { JwtUtil } from "#Globals/Utils/JwtUtils.js";
 import { CryptoUtils } from "#Globals/Utils/CryptoUtils.js";
+import { Mailer } from "#Infrastructure/Mail/Mailer.js";
+import { join } from "path";
+import { SentMessageInfo } from "nodemailer";
+import { random8AlnumSecure } from "#Globals/Utils/AppUtils.js";
 
 @injectable()
 export class UserService implements IUserService {
@@ -27,11 +32,11 @@ export class UserService implements IUserService {
     @inject(DITypes.UserRepository) private readonly rep: IUserRepository,
     @inject(DITypes.UserCache) private readonly userCache: UserCache,
     @inject(DITypes.UserQueue) private readonly userQueue: UserQueue,
+    @inject(DITypes.Mailer) private readonly mailer: Mailer,
   ) {}
 
-  resetPassword(criteria: IUserServiceResetPassword): Promise<void> {
-    this.userQueue.resetPasswordEmailJob(criteria);
-
+  async resetPassword(criteria: IUserServiceResetPassword): Promise<void> {
+    await this.userQueue.resetPasswordEmailJob(criteria);
     return Promise.resolve();
   }
 
@@ -126,5 +131,42 @@ export class UserService implements IUserService {
 
     await this.userCache.removeUser(criteria.id!);
     this.userCache.addUser(updatedUser);
+  }
+
+  async sendResetPasswordEmail_JobHandler(criteria: IUserServiceResetPassword): Promise<SentMessageInfo> {
+    let user;
+
+    if (criteria.email)
+      user = await this.rep.findUnique({ where: { email: criteria.email }, select: { id: true, username: true } });
+    else user = await this.rep.findUnique({ where: { username: criteria.username }, select: { id: true, username: true } });
+
+    if (!user) return;
+
+    const passwordToken = await JwtUtil.createPasswordToken({ userId: user.id });
+
+    const templatePath = join(import.meta.dirname, "..", "..", "..", "Public", "Templates", "ResetPassword.hbs");
+    const context = { username: user.username, token: passwordToken };
+    const options = {
+      from: '"Acme Support" <support@acme.com>',
+      to: "jane@example.com",
+      subject: "Password Reset Request",
+    };
+    return await this.mailer.sendTemplate(templatePath, context, options);
+  }
+
+  async resetPasswordValidate(criteria: IUserServiceResetPasswordValidate): Promise<string> {
+    let tokenPayload;
+    try {
+      tokenPayload = await JwtUtil.verifyResetPasswordToken(criteria.token);
+    } catch (error: any) {
+      throw new AppError("Invalid token", status.UNAUTHORIZED, error);
+    }
+
+    const newPassword = random8AlnumSecure();
+    const newHashedPassword = await CryptoUtils.hashPassword(newPassword);
+
+    await this.rep.update({ data: { password: newHashedPassword }, where: { id: Number(tokenPayload.userId) } });
+
+    return newPassword;
   }
 }

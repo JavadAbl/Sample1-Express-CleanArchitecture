@@ -16,7 +16,6 @@ import { UserController } from "#API/Controllers/UserController.js";
 import { discoverPermissions } from "#Globals/Utils/DiscoverPermissions.js";
 import { registerControllers } from "#Globals/Utils/RegisterControllers.js";
 import { AuthController } from "#API/Controllers/AuthController.js";
-import { injectable } from "inversify";
 
 const logger = AppLogger.createLogger("Server");
 
@@ -95,7 +94,7 @@ class Program {
   }
 
   private setupWorkers() {
-    // container.get<UserWorker>(DITypes.UserWorker);
+    container.get<UserWorker>(DITypes.UserWorker);
   }
 }
 

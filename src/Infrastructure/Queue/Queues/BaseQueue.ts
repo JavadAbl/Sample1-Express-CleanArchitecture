@@ -37,6 +37,7 @@ export class BaseQueue<T extends JobContract<any, any>> {
   }
 
   protected addJob<K extends T["jobs"]>(name: K, data: T["payloads"][K], options?: JobsOptions) {
+    this.logger.info(`Job added: ${name}`, data);
     return this.queue.add(name as string, data, {
       attempts: 3,
       backoff: { type: "exponential", delay: 1000 },

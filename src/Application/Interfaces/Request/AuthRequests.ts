@@ -11,3 +11,7 @@ export type IAuthResetPasswordRequest = {
   username?: string;
   email?: string;
 };
+
+export type IAuthResetPasswordValidateRequest = {
+  token: string;
+};

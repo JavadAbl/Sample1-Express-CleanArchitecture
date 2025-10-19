@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { JwtUtil } from "#Globals/Utils/Jwt.js";
+import { JwtUtil } from "#Globals/Utils/JwtUtils.js";
 import { AppError } from "#Globals/Utils/AppError.js";
 import status from "http-status";
 

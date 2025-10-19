@@ -1,6 +1,6 @@
 // UserJobsContract.ts
 
-import { IUserServiceResetPassword } from "#Application/Interfaces/ServiceMethodTypes/User/IUserServiceResetPassword.js";
+import { IUserServiceResetPassword } from "#Application/Interfaces/ServiceMethodTypes/UserServiceMethodTypes.js";
 import { JobContract } from "./JobContract.js";
 
 export enum UserJobs {

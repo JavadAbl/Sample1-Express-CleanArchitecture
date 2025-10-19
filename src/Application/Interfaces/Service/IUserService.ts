@@ -7,6 +7,7 @@ import {
   IUserServiceLogin,
   IUserServiceRefreshToken,
   IUserServiceResetPassword,
+  IUserServiceResetPasswordValidate,
   IUserServiceUpdate,
 } from "../ServiceMethodTypes/UserServiceMethodTypes.js";
 
@@ -20,4 +21,6 @@ export interface IUserService {
   login(criteria: IUserServiceLogin): Promise<{ user: IUserDto; accessToken: string; refreshToken: string } | null>;
   refreshToken(criteria: IUserServiceRefreshToken): Promise<{ accessToken: string; refreshToken: string }>;
   resetPassword(criteria: IUserServiceResetPassword): Promise<void>;
+  sendResetPasswordEmail_JobHandler(criteria: IUserServiceResetPassword): Promise<any>;
+  resetPasswordValidate(criteria: IUserServiceResetPasswordValidate): Promise<string>;
 }

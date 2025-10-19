@@ -21,11 +21,15 @@ export class BaseWorker<T extends JobContract<any, any>> {
     this.worker = new Worker(
       this.queueName,
       async (job) => {
+        /*   console.log(1234);
+        throw new Error("sdasd");
+        return 1234; */
+
         const handler = this.handlers[job.name as T["jobs"]];
         if (!handler) {
           throw new Error(`Unknown job type: ${job.name}`);
         }
-        return handler(job.data);
+        handler(job.data);
       },
       {
         connection: {

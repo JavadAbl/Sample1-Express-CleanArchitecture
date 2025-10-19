@@ -12,6 +12,7 @@ class AppConfig {
   REDIS_PASSWORD: string;
   JWT_ACCESS: string;
   JWT_REFRESH: string;
+  JWT_PASSWORD: string;
   MAIL_ADDRESS: string;
   MAIL_PORT: string;
   MAIL_USER: string;
@@ -32,6 +33,7 @@ class AppConfig {
     this.REDIS_PASSWORD = process.env.REDIS_PASSWORD!;
     this.JWT_ACCESS = process.env.JWT_ACCESS!;
     this.JWT_REFRESH = process.env.JWT_REFRESH!;
+    this.JWT_PASSWORD = process.env.JWT_PASSWORD!;
     this.MAIL_ADDRESS = process.env.MAIL_ADDRESS!;
     this.MAIL_PORT = process.env.MAIL_PORT!;
     this.MAIL_USER = process.env.MAIL_USER!;

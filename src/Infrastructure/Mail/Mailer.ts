@@ -4,7 +4,9 @@ import { readFile } from "fs/promises";
 import Handlebars from "handlebars";
 import { AppError } from "#Globals/Utils/AppError.js";
 import { config } from "#Globals/Configs/AppConfig.js";
+import { injectable } from "inversify";
 
+@injectable()
 export class Mailer {
   private transporter: Transporter;
 

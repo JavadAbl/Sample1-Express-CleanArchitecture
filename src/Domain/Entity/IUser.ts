@@ -13,7 +13,6 @@ export type IUser = {
   followingCount: number;
   postsCount: number;
   isActive: boolean;
-  resetPasswordToken: string | null;
   createdAt: Date;
   updatedAt: Date;
 };

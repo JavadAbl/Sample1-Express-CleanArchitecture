@@ -1,5 +1,5 @@
 import Express, { Application as ExpressApplication } from "express";
-import * as http from "http";
+import http from "http";
 import cors from "cors";
 import helmet from "helmet";
 import hpp from "hpp";
@@ -16,11 +16,17 @@ import { UserController } from "#API/Controllers/UserController.js";
 import { discoverPermissions } from "#Globals/Utils/DiscoverPermissions.js";
 import { registerControllers } from "#Globals/Utils/RegisterControllers.js";
 import { AuthController } from "#API/Controllers/AuthController.js";
+import { Server as IOServer } from "socket.io";
+import { createAdapter } from "@socket.io/redis-adapter";
+import { createClient } from "redis";
 
 const logger = AppLogger.createLogger("Server");
 
 class Program {
   private controllers = [UserController, AuthController];
+  private httpServer!: http.Server;
+  private ioServer!: IOServer;
+
   constructor(private readonly app: ExpressApplication) {}
 
   public run(): void {
@@ -33,7 +39,6 @@ class Program {
       this.setupHttpServer(this.app);
       this.setupWorkers();
     } catch (error) {
-      logger.error(error, "Sd");
       process.exit(1);
     }
   }
@@ -82,7 +87,7 @@ class Program {
   }
 
   //--------------------------------------------------------------------------------
-  private setupHttpServer(app: ExpressApplication): http.Server {
+  private setupHttpServer(app: ExpressApplication): void {
     const httpServer = http.createServer(app);
 
     httpServer.listen(config.HTTP_PORT, () => {
@@ -90,9 +95,22 @@ class Program {
       logger.info("Server running on port " + config.HTTP_PORT);
     });
 
-    return httpServer;
+    this.httpServer = httpServer;
   }
 
+  //--------------------------------------------------------------------------------
+  private setupSocketIO() {
+    this.ioServer = new IOServer(this.httpServer, { cors: { origin: ["http://localhost:5173"] } });
+
+    const pubClient = createClient({ url: "redis://localhost:6379" });
+    const subClient = pubClient.duplicate();
+
+    Promise.all([pubClient.connect(), subClient.connect()]);
+
+    this.ioServer.adapter(createAdapter(pubClient, subClient));
+  }
+
+  //--------------------------------------------------------------------------------
   private setupWorkers() {
     container.get<UserWorker>(DITypes.UserWorker);
   }

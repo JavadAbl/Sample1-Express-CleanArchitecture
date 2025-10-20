@@ -12,12 +12,14 @@ import { IUserRepository } from "#Application/Interfaces/Repository/IUserReposit
 import { UserCron } from "#Infrastructure/Cron/UserCron.js";
 import { AuthController } from "#API/Controllers/AuthController.js";
 import { Mailer } from "../../Infrastructure/Mail/Mailer.js";
+import { PostController } from "#API/Controllers/PostController.js";
 
 export const container = new Container();
 
 // Bind controllers
 container.bind<UserController>(DITypes.UserController).to(UserController).inSingletonScope();
 container.bind<AuthController>(DITypes.AuthController).to(AuthController).inSingletonScope();
+container.bind<PostController>(DITypes.PostController).to(PostController).inSingletonScope();
 
 // Bind Services
 container.bind<IUserService>(DITypes.UserService).to(UserService).inSingletonScope();

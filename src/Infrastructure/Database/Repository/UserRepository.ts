@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { User, Prisma, PrismaClient } from "../Prisma/index.js";
-import { IUserRepository } from "../Interfaces/IUserRepository.js";
 import { DITypes } from "#Globals/DI/DITypes.js";
+import { IUserRepository } from "#Application/Interfaces/Repository/IUserRepository.js";
 
 @injectable()
 export class UserRepository implements IUserRepository {

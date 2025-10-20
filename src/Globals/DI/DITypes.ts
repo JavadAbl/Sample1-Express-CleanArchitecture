@@ -2,13 +2,16 @@ export const DITypes = {
   //Database
   PrismaClient: Symbol.for("PrismaClient"),
   UserRepository: Symbol.for("UserRepository"),
+  PostRepository: Symbol.for("PostRepository"),
 
   //Controllers
   UserController: Symbol.for("UserController"),
   AuthController: Symbol.for("AuthController"),
+  PostController: Symbol.for("PostController"),
 
   //Services
   UserService: Symbol.for("UserService"),
+  PostService: Symbol.for("PostService"),
 
   //Routes
   AppRoutes: Symbol.for("AppRoutes"),

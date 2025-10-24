@@ -21,3 +21,23 @@ export function random8AlnumSecure() {
   }
   return out.join("");
 }
+
+/**
+ * Returns the file extension (without the leading dot) or null if none exists.
+ * Handles hidden files, paths, and empty strings safely.
+ */
+export function extractExtensionFromFileName(fileName: string): string | null {
+  if (!fileName) return null;
+
+  // Strip directory components (POSIX & Windows)
+  const baseName = fileName.split(/[\\/]/).pop()!; // guaranteed non‑empty after split
+
+  // Find the last dot that is **not** the first character
+  const lastDot = baseName.lastIndexOf(".");
+
+  // No dot or dot is the first character → no extension
+  if (lastDot <= 0) return null;
+
+  const ext = baseName.slice(lastDot + 1);
+  return ext || null;
+}

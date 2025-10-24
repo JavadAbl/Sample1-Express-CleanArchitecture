@@ -9,6 +9,7 @@ yarn.lock
 pnpm-lock.yaml
 *.db
 src/Infrastructure/Database/Prisma
+Uploads
 
 # Environment variables
 .env

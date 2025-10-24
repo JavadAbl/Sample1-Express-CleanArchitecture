@@ -7,9 +7,10 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Seed your data here
-  await prisma.user.createMany({
-    data: users(),
-  });
+  if ((await prisma.user.count()) === 0)
+    await prisma.user.createMany({
+      data: users(),
+    });
 }
 
 main()

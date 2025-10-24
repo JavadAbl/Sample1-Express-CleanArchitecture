@@ -1,11 +1,11 @@
 export type IPost = {
   id: number;
   title: string;
-  content?: string;
-  imageId: number;
-  userId: number;
+  content: string | null;
+  image: string;
   commentCount: number;
   likeCount: number;
+  userId: number;
   createdAt: Date;
   updatedAt: Date;
 };

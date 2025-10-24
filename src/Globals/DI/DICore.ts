@@ -13,6 +13,10 @@ import { UserCron } from "#Infrastructure/Cron/UserCron.js";
 import { AuthController } from "#API/Controllers/AuthController.js";
 import { Mailer } from "../../Infrastructure/Mail/Mailer.js";
 import { PostController } from "#API/Controllers/PostController.js";
+import { IPostService } from "#Application/Interfaces/Service/IPostService.js";
+import { PostService } from "#Application/Services/PostService.js";
+import { IPostRepository } from "#Application/Interfaces/Repository/IPostRepository.js";
+import { PostRepository } from "#Infrastructure/Database/Repository/PostRepository.js";
 
 export const container = new Container();
 
@@ -23,10 +27,12 @@ container.bind<PostController>(DITypes.PostController).to(PostController).inSing
 
 // Bind Services
 container.bind<IUserService>(DITypes.UserService).to(UserService).inSingletonScope();
+container.bind<IPostService>(DITypes.PostService).to(PostService).inSingletonScope();
 
 // Bind Repositories
 container.bind<PrismaClient>(DITypes.PrismaClient).toConstantValue(new PrismaClient());
 container.bind<IUserRepository>(DITypes.UserRepository).to(UserRepository).inSingletonScope();
+container.bind<IPostRepository>(DITypes.PostRepository).to(PostRepository).inSingletonScope();
 
 // Bind Caches
 container.bind<UserCache>(DITypes.UserCache).to(UserCache).inSingletonScope();

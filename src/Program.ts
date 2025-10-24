@@ -19,11 +19,12 @@ import { AuthController } from "#API/Controllers/AuthController.js";
 import { Server as IOServer } from "socket.io";
 import { createAdapter } from "@socket.io/redis-adapter";
 import { createClient } from "redis";
+import { PostController } from "#API/Controllers/PostController.js";
 
 const logger = AppLogger.createLogger("Server");
 
 class Program {
-  private controllers = [UserController, AuthController];
+  private controllers = [UserController, AuthController, PostController];
   private httpServer!: http.Server;
   private ioServer!: IOServer;
 
@@ -102,12 +103,12 @@ class Program {
   private setupSocketIO() {
     this.ioServer = new IOServer(this.httpServer, { cors: { origin: ["http://localhost:5173"] } });
 
-    const pubClient = createClient({ url: "redis://localhost:6379" });
+    /*  const pubClient = createClient({ url: "redis://localhost:6379" });
     const subClient = pubClient.duplicate();
 
     Promise.all([pubClient.connect(), subClient.connect()]);
 
-    this.ioServer.adapter(createAdapter(pubClient, subClient));
+    this.ioServer.adapter(createAdapter(pubClient, subClient)); */
   }
 
   //--------------------------------------------------------------------------------

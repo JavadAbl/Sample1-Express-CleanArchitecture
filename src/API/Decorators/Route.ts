@@ -1,6 +1,6 @@
 type HttpMethod = "get" | "post" | "put" | "patch" | "delete";
 
-export function Route(method: HttpMethod, path: string) {
+export function Route(method: HttpMethod, path: string = "/") {
   return (target: any, propertyKey: string) => {
     const routes = Reflect.getMetadata("routes", target.constructor) || [];
     routes.push({ method, path, handler: propertyKey });

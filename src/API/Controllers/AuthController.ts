@@ -49,7 +49,6 @@ export class AuthController {
   @Route("post", "/ResetPassword")
   public async resetPassword(req: Request<unknown, unknown, IAuthResetPasswordRequest>, res: Response) {
     await this.userService.resetPassword(req.body);
-
     return res.status(status.NO_CONTENT).send();
   }
 
@@ -57,7 +56,6 @@ export class AuthController {
   @Route("post", "/resetPasswordValidate")
   public async resetPasswordValidate(req: Request<unknown, unknown, IAuthResetPasswordValidateRequest>, res: Response) {
     const password = await this.userService.resetPasswordValidate(req.body);
-
     return res.json({ password });
   }
 }

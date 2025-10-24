@@ -15,8 +15,8 @@ import {
   IUserServiceResetPassword,
   IUserServiceResetPasswordValidate,
   IUserServiceUpdate,
-} from "#Application/Interfaces/ServiceMethodTypes/UserServiceMethodTypes.js";
-import { IServiceFindById, IServiceFindMany } from "#Application/Interfaces/ServiceMethodTypes/SharedServiceMethodTypes.js";
+} from "#Application/Interfaces/ServiceMethodTypes/UserMethodTypes.js";
+import { IServiceFindById, IServiceFindMany } from "#Application/Interfaces/ServiceMethodTypes/SharedMethodTypes.js";
 import status from "http-status";
 import { IUserRepository } from "#Application/Interfaces/Repository/IUserRepository.js";
 import { JwtUtil } from "#Globals/Utils/JwtUtils.js";

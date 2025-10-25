@@ -17,7 +17,7 @@ import { MulterMiddleware } from "#API/Middlewares/MulterMiddleware.js";
 import status from "http-status";
 import { SFindManyQuery } from "#API/Schema/Shared/SFindManyQuery.js";
 import { SGetById } from "#API/Schema/Shared/SGetById.js";
-import { IGetByIdRequest } from "#Application/Interfaces/Request/SharedRequests.js";
+import { IGetByIdRequest, IGetManyQueryRequest } from "#Application/Interfaces/Request/SharedRequests.js";
 import { AuthNMiddleware } from "#API/Middlewares/AuthNMiddleware.js";
 import { SPostUpdate } from "#API/Schema/Post/SPostUpdate.js";
 import { SDelete } from "#API/Schema/Shared/SDelete.js";
@@ -30,8 +30,8 @@ export class PostController {
 
   @ZodValidation(SFindManyQuery, "query")
   @Route("get")
-  public async get(req: Request<unknown, unknown, unknown, IPostFindManyRequest>, res: Response) {
-    const posts = await this.postService.findMany(req.query);
+  public async get(req: Request<unknown, unknown, unknown, IGetManyQueryRequest>, res: Response) {
+    const posts = await this.postService.findMany({ ...req.query, userId: req.userId });
     return res.json(posts);
   }
 

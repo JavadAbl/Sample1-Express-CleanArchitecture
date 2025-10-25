@@ -12,6 +12,7 @@ import {
 import { IFindByIdService } from "#Application/Interfaces/ServiceMethodTypes/SharedMethodTypes.js";
 import { AppError } from "#Globals/Utils/AppError.js";
 import status from "http-status";
+import { buildFindManyArgs } from "#Globals/Utils/PrismaUtils.js";
 
 @injectable()
 export class PostService implements IPostService {
@@ -44,7 +45,9 @@ export class PostService implements IPostService {
   }
 
   async findMany(criteria: IPostFindManyService): Promise<IPostDto[]> {
-    const posts = await this.rep.findMany({ where: { userId: criteria.userId }, ...criteria });
+    const { userId, ...searchParams } = criteria;
+    const args = buildFindManyArgs<"Post">(searchParams);
+    const posts = await this.rep.findMany({ ...args, where: { userId } });
     return posts.map(toPostDto);
   }
 

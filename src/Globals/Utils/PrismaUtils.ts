@@ -1,8 +1,8 @@
-import { IFindManyQueryDto } from "#Application/Interfaces/Request/Shared/IFindManyQueryRequest.js";
+import { IGetManyQueryRequest } from "#Application/Interfaces/Request/SharedRequests.js";
 import { Prisma } from "#Infrastructure/Database/Prisma/index.js";
 
 export function buildFindManyArgs<T extends keyof Prisma.TypeMap["model"]>(
-  criteria: IFindManyQueryDto,
+  criteria: IGetManyQueryRequest,
   options?: {
     searchableFields?: string[]; // ✅ simpler and flexible
   },

@@ -19,7 +19,7 @@ export class JwtUtil {
   private static readonly PASSWORD_SECRET = new TextEncoder().encode(config.JWT_PASSWORD);
 
   // token lifetimes (seconds)
-  private static readonly ACCESS_TTL = 60 * 15; // 15 min
+  private static readonly ACCESS_TTL = 60 * 15 * 100; // 15 min
   private static readonly REFRESH_TTL = 60 * 60 * 24 * 30; // 30 days
   private static readonly PASSWORD_TTL = 60 * 15; // 15 min
 

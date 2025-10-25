@@ -3,15 +3,18 @@ export const DITypes = {
   PrismaClient: Symbol.for("PrismaClient"),
   UserRepository: Symbol.for("UserRepository"),
   PostRepository: Symbol.for("PostRepository"),
+  CommentRepository: Symbol.for("CommentRepository"),
 
   //Controllers
   UserController: Symbol.for("UserController"),
   AuthController: Symbol.for("AuthController"),
   PostController: Symbol.for("PostController"),
+  CommentController: Symbol.for("CommentController"),
 
   //Services
   UserService: Symbol.for("UserService"),
   PostService: Symbol.for("PostService"),
+  CommentService: Symbol.for("CommentService"),
 
   //Routes
   AppRoutes: Symbol.for("AppRoutes"),

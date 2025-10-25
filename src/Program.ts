@@ -20,11 +20,12 @@ import { Server as IOServer } from "socket.io";
 import { createAdapter } from "@socket.io/redis-adapter";
 import { createClient } from "redis";
 import { PostController } from "#API/Controllers/PostController.js";
+import { CommentController } from "#API/Controllers/CommentController.js";
 
 const logger = AppLogger.createLogger("Server");
 
 class Program {
-  private controllers = [UserController, AuthController, PostController];
+  private controllers = [UserController, AuthController, PostController, CommentController];
   private httpServer!: http.Server;
   private ioServer!: IOServer;
 

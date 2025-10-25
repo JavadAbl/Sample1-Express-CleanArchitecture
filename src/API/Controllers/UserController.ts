@@ -12,13 +12,13 @@ import { Route } from "#API/Decorators/Route.js";
 import { Middlewares } from "#API/Decorators/Middlewares.js";
 import { ZodValidation } from "#API/Decorators/ZodValidation.js";
 import { SUserUpdate } from "#API/Schema/User/SUserUpdate.js";
-import { AuthenticationMiddleware } from "#API/Middlewares/AuthenticationMiddleware.js";
 import { IUserCreateRequest, IUserUpdateRequest } from "#Application/Interfaces/Request/UserRequests.js";
-import { IDeleteRequest, IFindManyQueryRequest, IGetByIdRequest } from "#Application/Interfaces/Request/SharedRequests.js";
+import { IDeleteRequest, IGetManyQueryRequest, IGetByIdRequest } from "#Application/Interfaces/Request/SharedRequests.js";
+import { AuthNMiddleware } from "#API/Middlewares/AuthNMiddleware.js";
 
 @injectable()
 @Controller("/users")
-@Middlewares(AuthenticationMiddleware.handle)
+@Middlewares(AuthNMiddleware.handle)
 export class UserController {
   constructor(@inject(DITypes.UserService) private readonly userService: IUserService) {}
 
@@ -31,15 +31,15 @@ export class UserController {
   } */
 
   @ZodValidation(SUserCreate, "body")
-  @Route("post", "/")
+  @Route("post")
   public async post(req: Request<unknown, unknown, IUserCreateRequest>, res: Response) {
     const userDto = await this.userService.create(req.body);
     return res.status(status.CREATED).json(userDto);
   }
 
   @ZodValidation(SFindManyQuery, "query")
-  @Route("get", "/")
-  public async get(req: Request<unknown, unknown, unknown, IFindManyQueryRequest>, res: Response) {
+  @Route("get")
+  public async get(req: Request<unknown, unknown, unknown, IGetManyQueryRequest>, res: Response) {
     const users = await this.userService.findMany(req.query);
     return res.json(users);
   }
@@ -47,14 +47,14 @@ export class UserController {
   @ZodValidation(SGetById, "params")
   @Route("get", "/:id")
   public async getById(req: Request<IGetByIdRequest>, res: Response) {
-    const user = await this.userService.findById(req.params.id);
+    const user = await this.userService.findById(req.params);
     return res.json(user);
   }
 
   @ZodValidation(SUserUpdate, "body")
-  @Route("put", "/")
+  @Route("put")
   public async put(req: Request<unknown, unknown, IUserUpdateRequest>, res: Response) {
-    await this.userService.update(req.body);
+    await this.userService.update({ ...req.body, id: req.userId });
     return res.status(status.NO_CONTENT).send();
   }
 

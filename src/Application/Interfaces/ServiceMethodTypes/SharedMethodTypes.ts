@@ -1,8 +1,8 @@
-import { IFindManyQueryRequest } from "../Request/SharedRequests.js";
+import { IGetManyQueryRequest } from "../Request/SharedRequests.js";
 
-export type IServiceFindById = number;
-export type IServiceFindMany = IFindManyQueryRequest;
-export interface IServiceFindOne {
+export type IFindByIdService = { id: number };
+export type IFindManyService = IGetManyQueryRequest;
+export interface IFindOneService {
   field: string;
   value: string;
 }

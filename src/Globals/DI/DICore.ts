@@ -17,6 +17,11 @@ import { IPostService } from "#Application/Interfaces/Service/IPostService.js";
 import { PostService } from "#Application/Services/PostService.js";
 import { IPostRepository } from "#Application/Interfaces/Repository/IPostRepository.js";
 import { PostRepository } from "#Infrastructure/Database/Repository/PostRepository.js";
+import { CommentController } from "#API/Controllers/CommentController.js";
+import { ICommentRepository } from "#Application/Interfaces/Repository/ICommentRepository.js";
+import { CommentRepository } from "#Infrastructure/Database/Repository/CommentRepository.js";
+import { ICommentService } from "#Application/Interfaces/Service/ICommentService.js";
+import { CommentService } from "#Application/Services/CommentService.js";
 
 export const container = new Container();
 
@@ -24,15 +29,18 @@ export const container = new Container();
 container.bind<UserController>(DITypes.UserController).to(UserController).inSingletonScope();
 container.bind<AuthController>(DITypes.AuthController).to(AuthController).inSingletonScope();
 container.bind<PostController>(DITypes.PostController).to(PostController).inSingletonScope();
+container.bind<CommentController>(DITypes.CommentController).to(CommentController).inSingletonScope();
 
 // Bind Services
 container.bind<IUserService>(DITypes.UserService).to(UserService).inSingletonScope();
 container.bind<IPostService>(DITypes.PostService).to(PostService).inSingletonScope();
+container.bind<ICommentService>(DITypes.CommentService).to(CommentService).inSingletonScope();
 
 // Bind Repositories
 container.bind<PrismaClient>(DITypes.PrismaClient).toConstantValue(new PrismaClient());
 container.bind<IUserRepository>(DITypes.UserRepository).to(UserRepository).inSingletonScope();
 container.bind<IPostRepository>(DITypes.PostRepository).to(PostRepository).inSingletonScope();
+container.bind<ICommentRepository>(DITypes.CommentRepository).to(CommentRepository).inSingletonScope();
 
 // Bind Caches
 container.bind<UserCache>(DITypes.UserCache).to(UserCache).inSingletonScope();

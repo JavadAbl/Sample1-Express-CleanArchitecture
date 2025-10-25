@@ -16,7 +16,6 @@ import {
   IUserServiceResetPasswordValidate,
   IUserServiceUpdate,
 } from "#Application/Interfaces/ServiceMethodTypes/UserMethodTypes.js";
-import { IServiceFindById, IServiceFindMany } from "#Application/Interfaces/ServiceMethodTypes/SharedMethodTypes.js";
 import status from "http-status";
 import { IUserRepository } from "#Application/Interfaces/Repository/IUserRepository.js";
 import { JwtUtil } from "#Globals/Utils/JwtUtils.js";
@@ -25,6 +24,7 @@ import { Mailer } from "#Infrastructure/Mail/Mailer.js";
 import { join } from "path";
 import { SentMessageInfo } from "nodemailer";
 import { random8AlnumSecure } from "#Globals/Utils/AppUtils.js";
+import { IFindByIdService, IFindManyService } from "#Application/Interfaces/ServiceMethodTypes/SharedMethodTypes.js";
 
 @injectable()
 export class UserService implements IUserService {
@@ -70,13 +70,13 @@ export class UserService implements IUserService {
     return { user: userDto, ...tokens };
   }
 
-  async findById(criteria: IServiceFindById): Promise<IUserDto> {
+  async findById(criteria: IFindByIdService): Promise<IUserDto> {
     // Try to get user from cache
-    const cachedUser = await this.userCache.getUser(criteria);
+    const cachedUser = await this.userCache.getUser(criteria.id);
     if (cachedUser) return cachedUser;
 
     // If not found in cache, get from database
-    const user = await this.rep.findUnique({ where: { id: criteria } });
+    const user = await this.rep.findUnique({ where: { id: criteria.id } });
     if (!user) throw new AppError("User not found", status.NOT_FOUND);
     return toUserDto(user);
   }
@@ -87,7 +87,7 @@ export class UserService implements IUserService {
     return toUserDto(user);
   }
 
-  async findMany(criteria: IServiceFindMany): Promise<IUserDto[]> {
+  async findMany(criteria: IFindManyService): Promise<IUserDto[]> {
     const args = buildFindManyArgs<"User">(criteria, {
       searchableFields: ["username"],
     });
@@ -127,7 +127,9 @@ export class UserService implements IUserService {
     const user = await this.rep.findUnique({ where: { id: criteria.id }, select: { id: true } });
     if (!user) throw new AppError("User not found", status.NOT_FOUND);
 
-    const updatedUser = await this.rep.update({ data: criteria, where: { id: criteria.id }, omit: { password: true } });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...updateData } = criteria;
+    const updatedUser = await this.rep.update({ data: updateData, where: { id: criteria.id }, omit: { password: true } });
 
     await this.userCache.removeUser(criteria.id!);
     this.userCache.addUser(updatedUser);

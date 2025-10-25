@@ -13,4 +13,4 @@ export type IUserServiceLogin = IUserLoginRequest;
 export type IUserServiceRefreshToken = IAuthRefreshTokenRequest;
 export type IUserServiceResetPassword = IAuthResetPasswordRequest;
 export type IUserServiceResetPasswordValidate = IAuthResetPasswordValidateRequest;
-export type IUserServiceUpdate = IUserUpdateRequest;
+export type IUserServiceUpdate = IUserUpdateRequest & { id: number };

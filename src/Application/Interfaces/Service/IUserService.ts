@@ -1,5 +1,5 @@
 import { IUserDto } from "#Application/Interfaces/Dto/User/IUserDto.js";
-import { IServiceFindById, IServiceFindMany } from "../ServiceMethodTypes/SharedMethodTypes.js";
+import { IFindByIdService, IFindManyService } from "../ServiceMethodTypes/SharedMethodTypes.js";
 import {
   IUserServiceCreate,
   IUserServiceDelete,
@@ -13,9 +13,9 @@ import {
 
 export interface IUserService {
   create(criteria: IUserServiceCreate): Promise<IUserDto>;
-  findById(criteria: IServiceFindById): Promise<IUserDto>;
+  findById(criteria: IFindByIdService): Promise<IUserDto>;
   findByUsername(criteria: IUserServiceFindByUsername): Promise<IUserDto>;
-  findMany(criteria: IServiceFindMany): Promise<IUserDto[]>;
+  findMany(criteria: IFindManyService): Promise<IUserDto[]>;
   update(criteria: IUserServiceUpdate): Promise<void>;
   delete(criteria: IUserServiceDelete): Promise<void>;
   login(criteria: IUserServiceLogin): Promise<{ user: IUserDto; accessToken: string; refreshToken: string } | null>;

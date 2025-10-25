@@ -1,5 +1,5 @@
-import { AuthenticationMiddleware } from "#API/Middlewares/AuthenticationMiddleware.js";
-import { AuthorizationMiddleware } from "#API/Middlewares/AuthorizationMiddleware.js";
+import { AuthNMiddleware } from "#API/Middlewares/AuthNMiddleware.js";
+import { AuthZMiddleware } from "#API/Middlewares/AuthZMiddleware.js";
 
 export function Permission() {
   return (target: any, propertyKey: string) => {
@@ -10,7 +10,7 @@ export function Permission() {
     const existing = Reflect.getMetadata("middlewares", target.constructor, propertyKey) || [];
     Reflect.defineMetadata(
       "middlewares",
-      [...existing, AuthenticationMiddleware.handle, AuthorizationMiddleware.handle],
+      [...existing, AuthNMiddleware.handle, AuthZMiddleware.handle],
       target.constructor,
       propertyKey,
     );

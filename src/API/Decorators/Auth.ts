@@ -1,4 +1,4 @@
-import { AuthenticationMiddleware } from "#API/Middlewares/AuthenticationMiddleware.js";
+import { AuthenticationMiddleware } from "#API/Middlewares/AuthNMiddleware.js";
 
 export function Auth() {
   return (target: any, propertyKey: string) => {

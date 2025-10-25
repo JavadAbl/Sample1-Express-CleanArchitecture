@@ -9,7 +9,6 @@ export type IUserCreateRequest = {
 };
 
 export type IUserUpdateRequest = Partial<{
-  id: number;
   username: string;
   firstName: string;
   lastName: string;

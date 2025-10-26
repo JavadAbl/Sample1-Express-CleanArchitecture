@@ -5,6 +5,7 @@ import {
   ICommentCreateService,
   ICommentDeleteService,
   ICommentFindManyService,
+  ICommentUpdateService,
 } from "#Application/Interfaces/ServiceMethodTypes/CommentMethodTypes.js";
 import { IFindByIdService } from "#Application/Interfaces/ServiceMethodTypes/SharedMethodTypes.js";
 import { DITypes } from "#Globals/DI/DITypes.js";
@@ -20,12 +21,14 @@ export class CommentService implements ICommentService {
   async findMany(criteria: ICommentFindManyService): Promise<ICommentDto[]> {
     const { postId, ...searchParams } = criteria;
     const args = buildFindManyArgs<"Comment">(searchParams);
-    const cms = await this.rep.findMany({ ...args, where: { postId } });
+    const cms = await this.rep.findMany({ ...args, where: { postId: Number(postId) } });
     return cms.map((cm) => toCommentDto(cm));
   }
 
-  findById(criteria: IFindByIdService): Promise<ICommentDto> {
-    throw new Error("Method not implemented.");
+  async findById(criteria: IFindByIdService): Promise<ICommentDto> {
+    const cm = await this.rep.findUnique({ where: { id: criteria.id } });
+    if (!cm) throw new AppError("Comment not found", status.NOT_FOUND);
+    return toCommentDto(cm);
   }
 
   async create(criteria: ICommentCreateService): Promise<ICommentDto> {
@@ -33,8 +36,13 @@ export class CommentService implements ICommentService {
     return toCommentDto(comment);
   }
 
-  update(criteria: ICommentUpdateService): Promise<void> {
-    throw new Error("Method not implemented.");
+  async update(criteria: ICommentUpdateService): Promise<void> {
+    const cm = await this.rep.findUnique({ where: { id: criteria.id }, select: { userId: true } });
+
+    if (!cm) throw new AppError("Comment not found", status.NOT_FOUND);
+    if (cm?.userId !== criteria.userId) throw new AppError("UNAUTHORIZED", status.UNAUTHORIZED);
+
+    await this.rep.update({ where: { id: criteria.id }, data: { content: criteria.content } });
   }
 
   async delete(criteria: ICommentDeleteService): Promise<void> {

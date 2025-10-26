@@ -6,18 +6,13 @@ import { SPostCreate } from "#API/Schema/Post/SPostCreate.js";
 import { IPostService } from "#Application/Interfaces/Service/IPostService.js";
 import { DITypes } from "#Globals/DI/DITypes.js";
 import { inject, injectable } from "inversify";
-import {
-  IPostCreateRequest,
-  IPostDeleteRequest,
-  IPostFindManyRequest,
-  IPostUpdateRequest,
-} from "#Application/Interfaces/Request/PostRequests.js";
+import { IPostCreateRequest, IPostUpdateRequest } from "#Application/Interfaces/Request/PostRequests.js";
 import { Middlewares } from "#API/Decorators/Middlewares.js";
 import { MulterMiddleware } from "#API/Middlewares/MulterMiddleware.js";
 import status from "http-status";
 import { SFindManyQuery } from "#API/Schema/Shared/SFindManyQuery.js";
 import { SGetById } from "#API/Schema/Shared/SGetById.js";
-import { IGetByIdRequest, IGetManyQueryRequest } from "#Application/Interfaces/Request/SharedRequests.js";
+import { IDeleteRequest, IGetByIdRequest, IGetManyQueryRequest } from "#Application/Interfaces/Request/SharedRequests.js";
 import { AuthNMiddleware } from "#API/Middlewares/AuthNMiddleware.js";
 import { SPostUpdate } from "#API/Schema/Post/SPostUpdate.js";
 import { SDelete } from "#API/Schema/Shared/SDelete.js";
@@ -59,7 +54,7 @@ export class PostController {
 
   @ZodValidation(SDelete)
   @Route("delete")
-  async delete(req: Request<unknown, unknown, IPostDeleteRequest>, res: Response) {
+  async delete(req: Request<unknown, unknown, IDeleteRequest>, res: Response) {
     await this.postService.delete({ ...req.body, userId: req.userId });
     res.status(status.NO_CONTENT).send();
   }

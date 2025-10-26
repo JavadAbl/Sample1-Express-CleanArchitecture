@@ -6,3 +6,8 @@ export type ICommentCreateRequest = {
 };
 
 export type ICommentGetManyRequest = IGetManyQueryRequest & { postId: number };
+
+export type ICommentUpdateRequest = {
+  id: number;
+  content: string;
+};

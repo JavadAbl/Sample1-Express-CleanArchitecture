@@ -8,3 +8,5 @@ export type IPostUpdateRequest = {
   title?: string;
   content?: string;
 };
+
+export type IPostLikeRequest = { postId: number };

@@ -22,6 +22,8 @@ import { ICommentRepository } from "#Application/Interfaces/Repository/ICommentR
 import { CommentRepository } from "#Infrastructure/Database/Repository/CommentRepository.js";
 import { ICommentService } from "#Application/Interfaces/Service/ICommentService.js";
 import { CommentService } from "#Application/Services/CommentService.js";
+import { ILikeRepository } from "#Application/Interfaces/Repository/ILikeRepository.js";
+import { LikeRepository } from "#Infrastructure/Database/Repository/LikeRepository.js";
 
 export const container = new Container();
 
@@ -41,6 +43,7 @@ container.bind<PrismaClient>(DITypes.PrismaClient).toConstantValue(new PrismaCli
 container.bind<IUserRepository>(DITypes.UserRepository).to(UserRepository).inSingletonScope();
 container.bind<IPostRepository>(DITypes.PostRepository).to(PostRepository).inSingletonScope();
 container.bind<ICommentRepository>(DITypes.CommentRepository).to(CommentRepository).inSingletonScope();
+container.bind<ILikeRepository>(DITypes.LikeRepository).to(LikeRepository).inSingletonScope();
 
 // Bind Caches
 container.bind<UserCache>(DITypes.UserCache).to(UserCache).inSingletonScope();

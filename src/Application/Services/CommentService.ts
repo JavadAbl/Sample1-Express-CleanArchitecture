@@ -6,8 +6,8 @@ import {
   ICommentDeleteService,
   ICommentFindManyService,
   ICommentUpdateService,
-} from "#Application/Interfaces/ServiceMethodTypes/CommentMethodTypes.js";
-import { IFindByIdService } from "#Application/Interfaces/ServiceMethodTypes/SharedMethodTypes.js";
+} from "#Application/Interfaces/MethodTypes/CommentMethodTypes.js";
+import { IFindByIdService } from "#Application/Interfaces/MethodTypes/SharedMethodTypes.js";
 import { DITypes } from "#Globals/DI/DITypes.js";
 import { AppError } from "#Globals/Utils/AppError.js";
 import { buildFindManyArgs } from "#Globals/Utils/PrismaUtils.js";

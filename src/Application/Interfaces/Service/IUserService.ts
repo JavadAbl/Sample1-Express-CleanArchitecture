@@ -1,5 +1,5 @@
 import { IUserDto } from "#Application/Interfaces/Dto/User/IUserDto.js";
-import { IFindByIdService, IFindManyService } from "../ServiceMethodTypes/SharedMethodTypes.js";
+import { IFindByIdService, IFindManyService } from "../MethodTypes/SharedMethodTypes.js";
 import {
   IUserServiceCreate,
   IUserServiceDelete,
@@ -9,7 +9,7 @@ import {
   IUserServiceResetPassword,
   IUserServiceResetPasswordValidate,
   IUserServiceUpdate,
-} from "../ServiceMethodTypes/UserMethodTypes.js";
+} from "../MethodTypes/UserMethodTypes.js";
 
 export interface IUserService {
   create(criteria: IUserServiceCreate): Promise<IUserDto>;

@@ -4,6 +4,7 @@ export const DITypes = {
   UserRepository: Symbol.for("UserRepository"),
   PostRepository: Symbol.for("PostRepository"),
   CommentRepository: Symbol.for("CommentRepository"),
+  LikeRepository: Symbol.for("LikeRepository"),
 
   //Controllers
   UserController: Symbol.for("UserController"),

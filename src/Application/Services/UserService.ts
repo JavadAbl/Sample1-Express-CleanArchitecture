@@ -15,7 +15,7 @@ import {
   IUserServiceResetPassword,
   IUserServiceResetPasswordValidate,
   IUserServiceUpdate,
-} from "#Application/Interfaces/ServiceMethodTypes/UserMethodTypes.js";
+} from "#Application/Interfaces/MethodTypes/UserMethodTypes.js";
 import status from "http-status";
 import { IUserRepository } from "#Application/Interfaces/Repository/IUserRepository.js";
 import { JwtUtil } from "#Globals/Utils/JwtUtils.js";
@@ -24,7 +24,7 @@ import { Mailer } from "#Infrastructure/Mail/Mailer.js";
 import { join } from "path";
 import { SentMessageInfo } from "nodemailer";
 import { random8AlnumSecure } from "#Globals/Utils/AppUtils.js";
-import { IFindByIdService, IFindManyService } from "#Application/Interfaces/ServiceMethodTypes/SharedMethodTypes.js";
+import { IFindByIdService, IFindManyService } from "#Application/Interfaces/MethodTypes/SharedMethodTypes.js";
 
 @injectable()
 export class UserService implements IUserService {

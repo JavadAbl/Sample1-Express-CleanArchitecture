@@ -4,8 +4,8 @@ import {
   ICommentDeleteService,
   ICommentFindManyService,
   ICommentUpdateService,
-} from "../ServiceMethodTypes/CommentMethodTypes.js";
-import { IFindByIdService } from "../ServiceMethodTypes/SharedMethodTypes.js";
+} from "../MethodTypes/CommentMethodTypes.js";
+import { IFindByIdService } from "../MethodTypes/SharedMethodTypes.js";
 
 export interface ICommentService {
   findMany(criteria: ICommentFindManyService): Promise<ICommentDto[]>;

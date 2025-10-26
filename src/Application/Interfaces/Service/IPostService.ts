@@ -3,9 +3,10 @@ import {
   IPostCreateService,
   IPostDeleteService,
   IPostFindManyService,
+  IPostLikeActionService,
   IPostUpdateService,
-} from "../ServiceMethodTypes/PostMethodTypes.js";
-import { IFindByIdService } from "../ServiceMethodTypes/SharedMethodTypes.js";
+} from "../MethodTypes/PostMethodTypes.js";
+import { IFindByIdService } from "../MethodTypes/SharedMethodTypes.js";
 
 export interface IPostService {
   findMany(criteria: IPostFindManyService): Promise<IPostDto[]>;
@@ -13,4 +14,5 @@ export interface IPostService {
   create(criteria: IPostCreateService): Promise<IPostDto>;
   update(criteria: IPostUpdateService): Promise<void>;
   delete(criteria: IPostDeleteService): Promise<void>;
+  likeAction(criteria: IPostLikeActionService): Promise<void>;
 }

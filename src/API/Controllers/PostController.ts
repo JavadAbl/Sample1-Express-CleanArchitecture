@@ -6,7 +6,7 @@ import { SPostCreate } from "#API/Schema/Post/SPostCreate.js";
 import { IPostService } from "#Application/Interfaces/Service/IPostService.js";
 import { DITypes } from "#Globals/DI/DITypes.js";
 import { inject, injectable } from "inversify";
-import { IPostCreateRequest, IPostUpdateRequest } from "#Application/Interfaces/Request/PostRequests.js";
+import { IPostCreateRequest, IPostLikeRequest, IPostUpdateRequest } from "#Application/Interfaces/Request/PostRequests.js";
 import { Middlewares } from "#API/Decorators/Middlewares.js";
 import { MulterMiddleware } from "#API/Middlewares/MulterMiddleware.js";
 import status from "http-status";
@@ -16,6 +16,7 @@ import { IDeleteRequest, IGetByIdRequest, IGetManyQueryRequest } from "#Applicat
 import { AuthNMiddleware } from "#API/Middlewares/AuthNMiddleware.js";
 import { SPostUpdate } from "#API/Schema/Post/SPostUpdate.js";
 import { SDelete } from "#API/Schema/Shared/SDelete.js";
+import { SPostLike } from "#API/Schema/Post/SPostLike.js";
 
 @Controller("/Post")
 @Middlewares(AuthNMiddleware.handle)
@@ -56,6 +57,13 @@ export class PostController {
   @Route("delete")
   async delete(req: Request<unknown, unknown, IDeleteRequest>, res: Response) {
     await this.postService.delete({ ...req.body, userId: req.userId });
+    res.status(status.NO_CONTENT).send();
+  }
+
+  @ZodValidation(SPostLike)
+  @Route("post", "/Like")
+  async like(req: Request<unknown, unknown, IPostLikeRequest>, res: Response) {
+    await this.postService.likeAction({ ...req.body, userId: req.userId });
     res.status(status.NO_CONTENT).send();
   }
 }

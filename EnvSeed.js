@@ -15,8 +15,6 @@ const envVariables = {
   HTTP_PORT: "3000",
   HTTP_ADDRESS: "localhost",
   REDIS_ADDRESS: "redis://localhost:6379",
-  REDIS_USERNAME: "admin",
-  REDIS_PASSWORD: "P@ssw0rd",
   JWT_ACCESS: "JWT_ACCESS",
   JWT_REFRESH: "JWT_REFRESH",
   JWT_PASSWORD: "JWT_PASSWORD",

@@ -6,10 +6,10 @@ const adapter = new PrismaBetterSqlite3({
   url: process.env.DATABASE_URL,
 });
 
-export const prisma = new PrismaClient({ adapter });
+export const prismaClient = new PrismaClient({ adapter });
 
 export async function startDatabase() {
-  await prisma.$connect();
-  await prisma.$queryRaw`SELECT 1`;
+  await prismaClient.$connect();
+  await prismaClient.$queryRaw`SELECT 1`;
   console.log("Connected to database");
 }

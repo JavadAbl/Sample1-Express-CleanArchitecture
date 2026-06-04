@@ -4,7 +4,6 @@ import { IUserService } from "#Application/Interfaces/Service/IUserService.js";
 import { UserService } from "#Application/Services/UserService.js";
 import { UserRepository } from "#Infrastructure/Database/Repository/UserRepository.js";
 import { UserController } from "#API/Controllers/UserController.js";
-import { PrismaClient } from "#Infrastructure/Database/Prisma/index.js";
 import { UserCache } from "#Infrastructure/Cache/UserCache.js";
 import { UserQueue } from "#Infrastructure/Queue/Queues/UserQueue.js";
 import { UserWorker } from "#Infrastructure/Queue/Workers/UserWorker.js";
@@ -24,6 +23,8 @@ import { ICommentService } from "#Application/Interfaces/Service/ICommentService
 import { CommentService } from "#Application/Services/CommentService.js";
 import { ILikeRepository } from "#Application/Interfaces/Repository/ILikeRepository.js";
 import { LikeRepository } from "#Infrastructure/Database/Repository/LikeRepository.js";
+import { prismaClient } from "#Infrastructure/Database/PrismaProvider.js";
+import { PrismaClient } from "#Infrastructure/Database/Prisma/client.js";
 
 export const container = new Container();
 
@@ -39,7 +40,7 @@ container.bind<IPostService>(DITypes.PostService).to(PostService).inSingletonSco
 container.bind<ICommentService>(DITypes.CommentService).to(CommentService).inSingletonScope();
 
 // Bind Repositories
-container.bind<PrismaClient>(DITypes.PrismaClient).toConstantValue(new PrismaClient());
+container.bind<PrismaClient>(DITypes.PrismaClient).toConstantValue(prismaClient);
 container.bind<IUserRepository>(DITypes.UserRepository).to(UserRepository).inSingletonScope();
 container.bind<IPostRepository>(DITypes.PostRepository).to(PostRepository).inSingletonScope();
 container.bind<ICommentRepository>(DITypes.CommentRepository).to(CommentRepository).inSingletonScope();

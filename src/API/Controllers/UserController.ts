@@ -22,14 +22,6 @@ import { AuthNMiddleware } from "#API/Middlewares/AuthNMiddleware.js";
 export class UserController {
   constructor(@inject(DITypes.UserService) private readonly userService: IUserService) {}
 
-  /* @Route("get", "/test")
-  @Middlewares(LoggerMiddleware.handle)
-  public test(req: Request, res: Response) {
-    console.log("2");
-
-    return res.status(status.NO_CONTENT).send();
-  } */
-
   @ZodValidation(SUserCreate, "body")
   @Route("post")
   public async post(req: Request<unknown, unknown, IUserCreateRequest>, res: Response) {

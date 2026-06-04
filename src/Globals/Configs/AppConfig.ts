@@ -8,8 +8,6 @@ class AppConfig {
   HTTP_PORT: string;
   HTTP_ADDRESS: string;
   REDIS_ADDRESS: string;
-  REDIS_USERNAME: string;
-  REDIS_PASSWORD: string;
   JWT_ACCESS: string;
   JWT_REFRESH: string;
   JWT_PASSWORD: string;
@@ -29,8 +27,6 @@ class AppConfig {
     this.HTTP_PORT = process.env.HTTP_PORT!;
     this.HTTP_ADDRESS = process.env.HTTP_ADDRESS!;
     this.REDIS_ADDRESS = process.env.REDIS_ADDRESS!;
-    this.REDIS_USERNAME = process.env.REDIS_USERNAME!;
-    this.REDIS_PASSWORD = process.env.REDIS_PASSWORD!;
     this.JWT_ACCESS = process.env.JWT_ACCESS!;
     this.JWT_REFRESH = process.env.JWT_REFRESH!;
     this.JWT_PASSWORD = process.env.JWT_PASSWORD!;

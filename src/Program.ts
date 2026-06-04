@@ -40,7 +40,8 @@ class Program {
       this.setupErrorHandler(this.app);
       this.setupHttpServer(this.app);
       this.setupWorkers();
-    } catch (error) {
+    } catch (error: any) {
+      logger.error(error);
       process.exit(1);
     }
   }

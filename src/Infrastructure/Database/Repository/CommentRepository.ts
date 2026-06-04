@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
-import { Comment, Prisma, PrismaClient } from "../Prisma/index.js";
 import { DITypes } from "#Globals/DI/DITypes.js";
 import { ICommentRepository } from "#Application/Interfaces/Repository/ICommentRepository.js";
+import { Comment, Prisma, PrismaClient } from "../Prisma/client.js";
 
 @injectable()
 export class CommentRepository implements ICommentRepository {
